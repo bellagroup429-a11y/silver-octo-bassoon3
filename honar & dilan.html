@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داوەتنامەکا تایبەت | پیرۆزباهییا شەهیانێ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Amiri & Cairo & Tajawal for rich Kurdish/Arabic typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for crisp icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'Tajawal', 'sans-serif'],
+                        serif: ['Amiri', 'serif'],
+                    },
+                    colors: {
+                        emeraldRoyal: {
+                            950: '#041f18',
+                            900: '#062c22',
+                            800: '#0a3f31',
+                            700: '#105946',
+                        },
+                        goldChampagne: {
+                            100: '#fbf6e9',
+                            200: '#f3e5c0',
+                            300: '#e6ca85',
+                            400: '#d4af37',
+                            500: '#b89022',
+                            600: '#916e14',
+                        },
+                        ivoryWarm: '#fcfaf5'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Royal Styling & Animations */
+        body {
+            background-color: #041f18;
+            color: #fcfaf5;
+            overflow-x: hidden;
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #f3e5c0 0%, #d4af37 45%, #fff3d1 70%, #b89022 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border-glow {
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            box-shadow: 0 10px 35px -5px rgba(0, 0, 0, 0.45), inset 0 0 20px rgba(212, 175, 55, 0.06);
+        }
+
+        .glass-card {
+            background: rgba(6, 44, 34, 0.72);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .islamic-pattern {
+            background-image: radial-gradient(rgba(212, 175, 55, 0.12) 1px, transparent 1px),
+                              radial-gradient(rgba(212, 175, 55, 0.08) 1px, #041f18 1px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1.5deg); }
+        }
+
+        .animate-float {
+            animation: floatSlow 6s ease-in-out infinite;
+        }
+
+        @keyframes pulseGold {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.45); }
+            50% { box-shadow: 0 0 0 12px rgba(212, 175, 55, 0); }
+        }
+
+        .pulse-gold {
+            animation: pulseGold 2.5s infinite;
+        }
+
+        /* Sound visualizer bars */
+        .bar {
+            width: 3px;
+            height: 12px;
+            background-color: #d4af37;
+            border-radius: 9999px;
+            transition: height 0.2s ease;
+        }
+        .playing .bar:nth-child(1) { animation: soundBar 0.7s infinite alternate; }
+        .playing .bar:nth-child(2) { animation: soundBar 0.5s infinite alternate 0.2s; }
+        .playing .bar:nth-child(3) { animation: soundBar 0.8s infinite alternate 0.1s; }
+        .playing .bar:nth-child(4) { animation: soundBar 0.6s infinite alternate 0.3s; }
+
+        @keyframes soundBar {
+            0% { height: 4px; }
+            100% { height: 18px; }
+        }
+    </style>
+</head>
+<body class="islamic-pattern font-sans antialiased selection:bg-goldChampagne-400 selection:text-emeraldRoyal-950">
+
+    <!-- Top Floating Settings Trigger Button -->
+    <div class="fixed top-4 left-4 z-40">
+        <button onclick="openEditModal()" class="flex items-center gap-2 px-4 py-2.5 rounded-full glass-card gold-border-glow text-goldChampagne-200 hover:text-white transition-all duration-300 shadow-xl text-xs sm:text-sm font-bold">
+            <i class="fa-solid fa-sliders text-goldChampagne-400"></i>
+            <span>سێتینگ • دەستکاریکرن</span>
+        </button>
+    </div>
+
+    <!-- Floating Bottom-Right Royal Music Toggle Button (Play/Pause) -->
+    <div class="fixed bottom-5 right-5 z-40">
+        <button id="musicToggleBtn" onclick="toggleMusic()" class="flex items-center gap-3 px-4 py-3 rounded-full glass-card gold-border-glow text-goldChampagne-200 hover:text-white transition-all duration-300 shadow-2xl group" title="مۆزیکا پاشبنەمایێ">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-goldChampagne-500 to-goldChampagne-400 text-emeraldRoyal-950 flex items-center justify-center shrink-0 shadow">
+                <i id="musicPlayIcon" class="fa-solid fa-play text-xs"></i>
+            </div>
+            <div id="visualizer" class="flex items-end gap-1 h-4">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <span id="musicText" class="text-xs sm:text-sm font-bold pl-1">لێدانا مۆزیکێ</span>
+        </button>
+        <video id="customMediaPlayer" loop playsinline class="hidden"></video>
+    </div>
+
+    <!-- Custom Toast Notification (No alert() used) -->
+    <div id="toastNotification" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden items-center gap-3 px-6 py-3.5 rounded-2xl bg-emeraldRoyal-800 border border-goldChampagne-400 text-ivoryWarm shadow-2xl transition-all duration-300">
+        <i class="fa-solid fa-circle-check text-goldChampagne-400 text-lg"></i>
+        <span id="toastMessage" class="text-sm font-medium">زانیاری ب سەرکەفتیانە هاتنە نویکرن!</span>
+    </div>
+
+    <!-- HERO SECTION -->
+    <header class="relative min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-16 text-center overflow-hidden">
+        <!-- Decorative Ambient Glows -->
+        <div class="absolute top-1/4 -right-24 w-72 h-72 bg-goldChampagne-400/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-1/4 -left-24 w-80 h-80 bg-emeraldRoyal-700/30 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Royal Frame Container -->
+        <div class="relative max-w-3xl w-full glass-card gold-border-glow rounded-[2.5rem] p-7 sm:p-12 md:p-14 shadow-2xl">
+            <!-- Top Corner SVG Ornaments -->
+            <svg class="w-14 h-14 text-goldChampagne-400/70 absolute top-4 right-4 animate-float" viewBox="0 0 100 100" fill="none">
+                <path d="M10 90 C10 40, 40 10, 90 10 M25 90 C25 50, 50 25, 90 25" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="90" cy="10" r="4" fill="currentColor"/>
+                <circle cx="10" cy="90" r="4" fill="currentColor"/>
+            </svg>
+            <svg class="w-14 h-14 text-goldChampagne-400/70 absolute top-4 left-4 -scale-x-100 animate-float" viewBox="0 0 100 100" fill="none">
+                <path d="M10 90 C10 40, 40 10, 90 10 M25 90 C25 50, 50 25, 90 25" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="90" cy="10" r="4" fill="currentColor"/>
+                <circle cx="10" cy="90" r="4" fill="currentColor"/>
+            </svg>
+
+            <!-- Bismillah / Traditional Opening -->
+            <p class="font-serif text-xl sm:text-2xl text-goldChampagne-300 tracking-wide mb-3">
+                ب ناڤێ خودایێ مەزن و دلۆڤان
+            </p>
+
+            <!-- Divider Line with Diamond -->
+            <div class="flex items-center justify-center gap-3 my-4">
+                <span class="h-[1px] w-16 sm:w-24 bg-gradient-to-l from-goldChampagne-400 to-transparent"></span>
+                <i class="fa-solid fa-diamond text-goldChampagne-400 text-xs"></i>
+                <span class="h-[1px] w-16 sm:w-24 bg-gradient-to-r from-goldChampagne-400 to-transparent"></span>
+            </div>
+
+            <!-- Invitation Subtitle -->
+            <span id="displayEventSubtitle" class="inline-block px-4 py-1 rounded-full bg-goldChampagne-400/15 border border-goldChampagne-400/30 text-goldChampagne-200 text-xs sm:text-sm font-semibold mb-5">
+                داوەتنامەکا تایبەت بۆ شەهیانا مە
+            </span>
+
+            <!-- Couple / Host Names -->
+            <h1 class="font-serif text-4xl sm:text-6xl md:text-7xl font-bold gold-gradient-text leading-tight py-2">
+                <span id="displayGroomName">Honar</span>
+                <span class="inline-block mx-2 sm:mx-4 text-3xl sm:text-5xl text-goldChampagne-300 font-normal">&amp;</span>
+                <span id="displayBrideName">Dilan</span>
+            </h1>
+
+            <!-- Warm Invitation Message -->
+            <p id="displayWelcomeText" class="mt-5 text-ivoryWarm/85 text-sm sm:text-base md:text-lg leading-relaxed max-w-xl mx-auto font-light">
+                ب خۆشحالی و دلەكێ پڕی شادی، ئەم داخوازناما هەوە یێن هێژا دکەین بۆ ئامادەبوون د ئاهەنگا شەهیانا مە دا. هاتنا هەوە دێ بیتە سەدەمێ زێدەبوونا خۆشیا مە.
+            </p>
+
+            <!-- Quick Date & Hall Pill -->
+            <div class="mt-7 inline-flex flex-wrap items-center justify-center gap-3 sm:gap-5 px-6 py-3 rounded-2xl bg-emeraldRoyal-950/70 border border-goldChampagne-400/25 text-xs sm:text-sm text-goldChampagne-200">
+                <div class="flex items-center gap-2">
+                    <i class="fa-regular fa-calendar-check text-goldChampagne-400"></i>
+                    <span id="displayHeroDate">ڕۆژا ئێکشەمبی • 2026/11/29</span>
+                </div>
+                <span class="hidden sm:inline text-goldChampagne-400/40">|</span>
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-location-dot text-goldChampagne-400"></i>
+                    <span id="displayHeroVenue">هۆڵا شاهانە- ROSE HALL - روز هول</span>
+                </div>
+            </div>
+
+            <!-- Live Countdown Timer -->
+            <div class="mt-9">
+                <p class="text-xs text-goldChampagne-300/80 uppercase tracking-wider mb-3">دەمێ مای بۆ دەستپێکرنا ئاهەنگێ</p>
+                <div class="grid grid-cols-4 gap-2.5 sm:gap-4 max-w-md mx-auto">
+                    <div class="bg-emeraldRoyal-950/85 border border-goldChampagne-400/30 rounded-2xl p-3 sm:p-4">
+                        <div id="cd-days" class="text-2xl sm:text-3xl font-extrabold text-goldChampagne-300">00</div>
+                        <div class="text-[11px] sm:text-xs text-ivoryWarm/70 mt-1">ڕۆژ</div>
+                    </div>
+                    <div class="bg-emeraldRoyal-950/85 border border-goldChampagne-400/30 rounded-2xl p-3 sm:p-4">
+                        <div id="cd-hours" class="text-2xl sm:text-3xl font-extrabold text-goldChampagne-300">00</div>
+                        <div class="text-[11px] sm:text-xs text-ivoryWarm/70 mt-1">دەمژمێر</div>
+                    </div>
+                    <div class="bg-emeraldRoyal-950/85 border border-goldChampagne-400/30 rounded-2xl p-3 sm:p-4">
+                        <div id="cd-minutes" class="text-2xl sm:text-3xl font-extrabold text-goldChampagne-300">00</div>
+                        <div class="text-[11px] sm:text-xs text-ivoryWarm/70 mt-1">خولەک</div>
+                    </div>
+                    <div class="bg-emeraldRoyal-950/85 border border-goldChampagne-400/30 rounded-2xl p-3 sm:p-4">
+                        <div id="cd-seconds" class="text-2xl sm:text-3xl font-extrabold text-goldChampagne-300">00</div>
+                        <div class="text-[11px] sm:text-xs text-ivoryWarm/70 mt-1">چرکە</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-9 flex flex-wrap items-center justify-center gap-3.5">
+                <a href="#rsvp-section" class="pulse-gold px-7 py-3.5 rounded-2xl bg-gradient-to-l from-goldChampagne-500 to-goldChampagne-400 text-emeraldRoyal-950 font-bold text-sm sm:text-base shadow-xl hover:scale-[1.02] transition-transform flex items-center gap-2">
+                    <i class="fa-solid fa-envelope-open-text"></i>
+                    <span>پشتڕاستکرنا هاتنێ (RSVP)</span>
+                </a>
+                <a href="#details-section" class="px-6 py-3.5 rounded-2xl bg-emeraldRoyal-900/90 border border-goldChampagne-400/40 text-goldChampagne-200 hover:text-white hover:border-goldChampagne-400 font-semibold text-sm sm:text-base transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>هویرکاریێن ئاهەنگێ</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-5xl mx-auto px-4 space-y-20 pb-24">
+
+        <!-- SECTION 1: EVENT DETAILS (جهـ و دەم و بەرنامە) -->
+        <section id="details-section" class="scroll-mt-20">
+            <div class="text-center mb-10">
+                <span class="text-goldChampagne-400 text-xs font-bold tracking-widest uppercase">هویرکاریێن داوەتێ</span>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-ivoryWarm mt-1">جهـ و دەمێ ئاهەنگێ</h2>
+                <div class="w-20 h-0.5 bg-goldChampagne-400/60 mx-auto mt-3 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1: Date & Time -->
+                <div class="glass-card gold-border-glow rounded-3xl p-7 text-center hover:-translate-y-1 transition-transform duration-300">
+                    <div class="w-14 h-14 rounded-2xl bg-goldChampagne-400/15 border border-goldChampagne-400/30 flex items-center justify-center mx-auto mb-5 text-goldChampagne-400 text-2xl">
+                        <i class="fa-regular fa-clock"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-goldChampagne-200 mb-2">ڕۆژ و دەمژمێر</h3>
+                    <p id="displayCardDate" class="text-ivoryWarm font-semibold text-base">ڕۆژا ئێکشەمبی • 2026/11/29</p>
+                    <p id="displayCardTime" class="text-goldChampagne-300/90 text-sm mt-1.5">دەمژمێر ٠٦:٠٠ ئێڤاری هەتا ١١:٠٠ شەڤ</p>
+                </div>
+
+                <!-- Card 2: Venue & Location -->
+                <div class="glass-card gold-border-glow rounded-3xl p-7 text-center hover:-translate-y-1 transition-transform duration-300">
+                    <div class="w-14 h-14 rounded-2xl bg-goldChampagne-400/15 border border-goldChampagne-400/30 flex items-center justify-center mx-auto mb-5 text-goldChampagne-400 text-2xl">
+                        <i class="fa-solid fa-landmark"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-goldChampagne-200 mb-2">جهـ و هۆڵا ئاهەنگێ</h3>
+                    <p id="displayCardHall" class="text-ivoryWarm font-semibold text-base">هۆڵا شاهانە- ROSE HALL - روز هول</p>
+                    <p id="displayCardAddress" class="text-ivoryWarm/75 text-sm mt-1">جادا سەرەکی، دهۆک / ئێمینکێ</p>
+                    <a id="displayMapLink" href="https://maps.google.com/?q=ROSE+HALL+Duhok" target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-goldChampagne-400/20 hover:bg-goldChampagne-400 hover:text-emeraldRoyal-950 text-goldChampagne-200 text-xs font-bold transition-colors">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <span>نیشاندان ل سەر نەخشەی (GPS)</span>
+                    </a>
+                </div>
+
+                <!-- Card 3: Program Schedule -->
+                <div class="glass-card gold-border-glow rounded-3xl p-7 text-center hover:-translate-y-1 transition-transform duration-300">
+                    <div class="w-14 h-14 rounded-2xl bg-goldChampagne-400/15 border border-goldChampagne-400/30 flex items-center justify-center mx-auto mb-5 text-goldChampagne-400 text-2xl">
+                        <i class="fa-solid fa-champagne-glasses"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-goldChampagne-200 mb-3">بەرنامێ ئاهەنگێ</h3>
+                    <ul class="space-y-2 text-sm text-ivoryWarm/85 text-right pr-2">
+                        <li class="flex items-center justify-between border-b border-goldChampagne-400/15 pb-1.5">
+                            <span><i class="fa-solid fa-sparkles text-goldChampagne-400 ml-2"></i>پێشوازییا مێهڤانان</span>
+                            <span class="text-goldChampagne-300 font-semibold">٠٦:٠٠</span>
+                        </li>
+                        <li class="flex items-center justify-between border-b border-goldChampagne-400/15 pb-1.5">
+                            <span><i class="fa-solid fa-rings-wedding text-goldChampagne-400 ml-2"></i>هاتنا بووک و زاڤای</span>
+                            <span class="text-goldChampagne-300 font-semibold">٠٧:٠٠</span>
+                        </li>
+                        <li class="flex items-center justify-between border-b border-goldChampagne-400/15 pb-1.5">
+                            <span><i class="fa-solid fa-music text-goldChampagne-400 ml-2"></i>شەهیان و گۆڤەند</span>
+                            <span class="text-goldChampagne-300 font-semibold">٠٧:٣٠</span>
+                        </li>
+                        <li class="flex items-center justify-between">
+                            <span><i class="fa-solid fa-utensils text-goldChampagne-400 ml-2"></i>شیڤا شاهانە</span>
+                            <span class="text-goldChampagne-300 font-semibold">٠٩:٠٠</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: PHOTOGRAPHER & SINGER (وێنەگر و سترانبێژ) -->
+        <section id="artists-section" class="scroll-mt-20">
+            <div class="text-center mb-10">
+                <span class="text-goldChampagne-400 text-xs font-bold tracking-widest uppercase">ستافێ هونەری یێ ئاهەنگێ</span>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-ivoryWarm mt-1">وێنەگر و سترانبێژێ ئاهەنگێ</h2>
+                <p class="text-ivoryWarm/70 text-sm mt-2 max-w-lg mx-auto">بۆ تۆمارکرنا جوانترین بیرەوەرییان و خۆشکرنا کەشێ شەهیانێ ب دەنگێ ڕەسەن</p>
+                <div class="w-20 h-0.5 bg-goldChampagne-400/60 mx-auto mt-3 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Photographer Card (مصور / وێنەگر) -->
+                <div class="relative glass-card gold-border-glow rounded-[2rem] p-7 sm:p-8 overflow-hidden group">
+                    <div class="absolute -left-6 -bottom-6 text-goldChampagne-400/10 text-9xl pointer-events-none group-hover:scale-110 transition-transform duration-500">
+                        <i class="fa-solid fa-camera-retro"></i>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5 relative z-10">
+                        <!-- Custom SVG Camera Emblem -->
+                        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-goldChampagne-400 to-goldChampagne-600 p-0.5 shrink-0 shadow-lg">
+                            <div class="w-full h-full bg-emeraldRoyal-950 rounded-[14px] flex items-center justify-center">
+                                <svg class="w-10 h-10 text-goldChampagne-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                    <circle cx="12" cy="13" r="4"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="text-center sm:text-right flex-1">
+                            <span class="inline-block px-3 py-1 rounded-full bg-goldChampagne-400/15 text-goldChampagne-300 text-xs font-bold mb-2">
+                                <i class="fa-solid fa-video ml-1"></i> وێنەگر و ڤیدیۆگرافەر (مصور)
+                            </span>
+                            <h3 id="displayPhotographerName" class="text-2xl font-bold text-ivoryWarm">Bella Group</h3>
+                            <p id="displayPhotographerDesc" class="text-ivoryWarm/80 text-sm mt-2 leading-relaxed">
+                                تۆمارکرنا جوانترین دیمەنێن شەهیانێ ب کوالێتیا سینەمایی 4K، وێنەگرتنا ئاسمانی (Drone) و مۆنتاژێ پڕۆفیشناڵ.
+                            </p>
+                            <div class="mt-4 flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                                <span class="px-3 py-1 rounded-lg bg-emeraldRoyal-950/80 border border-goldChampagne-400/20 text-xs text-goldChampagne-200">
+                                    <i class="fa-solid fa-camera ml-1 text-goldChampagne-400"></i> وێنەیێن فۆتۆگرافی
+                                </span>
+                                <span class="px-3 py-1 rounded-lg bg-emeraldRoyal-950/80 border border-goldChampagne-400/20 text-xs text-goldChampagne-200">
+                                    <i class="fa-solid fa-film ml-1 text-goldChampagne-400"></i> کلیپا سینەمایی
+                                </span>
+                            </div>
+                            <!-- Photographer Phone Button -->
+                            <div class="mt-4 pt-3 border-t border-goldChampagne-400/15 flex items-center justify-center sm:justify-start">
+                                <a id="displayPhotographerPhoneLink" href="tel:07506211234" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-goldChampagne-400/15 hover:bg-goldChampagne-400 text-goldChampagne-200 hover:text-emeraldRoyal-950 border border-goldChampagne-400/30 text-xs font-bold transition-all">
+                                    <i class="fa-solid fa-phone"></i>
+                                    <span>پەیوەندی ب وێنەگری:</span>
+                                    <span id="displayPhotographerPhone" dir="ltr">07506211234</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Singer Card (سترانبێژ) -->
+                <div class="relative glass-card gold-border-glow rounded-[2rem] p-7 sm:p-8 overflow-hidden group">
+                    <div class="absolute -left-6 -bottom-6 text-goldChampagne-400/10 text-9xl pointer-events-none group-hover:scale-110 transition-transform duration-500">
+                        <i class="fa-solid fa-microphone-lines"></i>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5 relative z-10">
+                        <!-- Custom SVG Microphone / Music Emblem -->
+                        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-goldChampagne-400 to-goldChampagne-600 p-0.5 shrink-0 shadow-lg">
+                            <div class="w-full h-full bg-emeraldRoyal-950 rounded-[14px] flex items-center justify-center">
+                                <svg class="w-10 h-10 text-goldChampagne-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                                    <line x1="12" y1="19" x2="12" y2="22"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="text-center sm:text-right flex-1">
+                            <span class="inline-block px-3 py-1 rounded-full bg-goldChampagne-400/15 text-goldChampagne-300 text-xs font-bold mb-2">
+                                <i class="fa-solid fa-music ml-1"></i> سترانبێژێ ئاهەنگێ
+                            </span>
+                            <h3 id="displaySingerName" class="text-2xl font-bold text-ivoryWarm">هونەرمەند عبدالله هركي</h3>
+                            <p id="displaySingerDesc" class="text-ivoryWarm/80 text-sm mt-2 leading-relaxed">
+                                خۆشترین سترانێن فۆلکلۆری، داوەت و شەهیانێن کوردی دگەل تیپا مۆزیکێ یا ڕەسەن بۆ گەرمکرنا گۆڤەندێ.
+                            </p>
+                            <div class="mt-4 flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                                <span class="px-3 py-1 rounded-lg bg-emeraldRoyal-950/80 border border-goldChampagne-400/20 text-xs text-goldChampagne-200">
+                                    <i class="fa-solid fa-guitar ml-1 text-goldChampagne-400"></i> سترانێن شەهیانێ
+                                </span>
+                                <span class="px-3 py-1 rounded-lg bg-emeraldRoyal-950/80 border border-goldChampagne-400/20 text-xs text-goldChampagne-200">
+                                    <i class="fa-solid fa-users ml-1 text-goldChampagne-400"></i> گۆڤەندا کوردی
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: RSVP & CONGRATULATIONS WALL (پشتڕاستکرنا هاتنێ و پیرۆزباهی) -->
+        <section id="rsvp-section" class="scroll-mt-20">
+            <div class="text-center mb-10">
+                <span class="text-goldChampagne-400 text-xs font-bold tracking-widest uppercase">ئامادەبوون و پیرۆزباهی</span>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-ivoryWarm mt-1">پشتڕاستکرنا هاتنێ (RSVP)</h2>
+                <p class="text-ivoryWarm/70 text-sm mt-2 max-w-lg mx-auto">هیڤیدارین هاتنا خۆ پشتڕاست بکەن و نامەکا پیرۆزباهییێ بۆ بووک و زاڤای بنڤیسن</p>
+                <div class="w-20 h-0.5 bg-goldChampagne-400/60 mx-auto mt-3 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- RSVP Form (7 Cols) -->
+                <div class="lg:col-span-7 glass-card gold-border-glow rounded-[2rem] p-7 sm:p-9">
+                    <form id="rsvpForm" onsubmit="handleRsvpSubmit(event)" class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-semibold text-goldChampagne-200 mb-2">ناڤێ تە یێ تەمام *</label>
+                            <input type="text" id="guestName" required placeholder="بۆ نموونە: شێرزاد ئامێدی" class="w-full px-4 py-3.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm placeholder-ivoryWarm/40 focus:outline-none focus:border-goldChampagne-400 transition-colors">
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-goldChampagne-200 mb-2">دێ ئامادە بی؟</label>
+                                <select id="attendanceStatus" class="w-full px-4 py-3.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm focus:outline-none focus:border-goldChampagne-400 transition-colors">
+                                    <option value="attending">بەلێ، ب خۆشحالی ڤە دێ ئامادە بم</option>
+                                    <option value="declined">ببورە، نەشێم ئامادە ببم</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-goldChampagne-200 mb-2">هژمارا مێهڤانان</label>
+                                <select id="guestCount" class="w-full px-4 py-3.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm focus:outline-none focus:border-goldChampagne-400 transition-colors">
+                                    <option value="1">١ کەس</option>
+                                    <option value="2" selected>٢ کەس (خێزان)</option>
+                                    <option value="3">٣ کەس</option>
+                                    <option value="4">٤ کەس</option>
+                                    <option value="5+">٥ کەس یان زێدەتر</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-goldChampagne-200 mb-2">نامەکا پیرۆزباهییێ بۆ بووک و زاڤای</label>
+                            <textarea id="guestWish" rows="3" placeholder="پیرۆز بیت، خودێ هەوە ب هەڤڕا بەختەوەر بکەت..." class="w-full px-4 py-3 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm placeholder-ivoryWarm/40 focus:outline-none focus:border-goldChampagne-400 transition-colors"></textarea>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-3 pt-1">
+                            <button type="button" onclick="sendRsvpViaWhatsApp()" class="flex-1 py-4 px-5 rounded-xl bg-gradient-to-l from-emerald-600 to-green-500 text-white font-extrabold text-sm sm:text-base shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-xl"></i>
+                                <span>پشتڕاستکرن و فرێکرن ب واتسئەپی (WhatsApp)</span>
+                            </button>
+                            <button type="submit" class="py-4 px-5 rounded-xl bg-gradient-to-l from-goldChampagne-500 to-goldChampagne-400 text-emeraldRoyal-950 font-extrabold text-sm sm:text-base shadow-lg hover:brightness-110 transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-heart"></i>
+                                <span>تۆمارکرن ل سەر دیوارێ پیرۆزباهییان</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Wishes Wall (5 Cols) -->
+                <div class="lg:col-span-5 glass-card gold-border-glow rounded-[2rem] p-7">
+                    <div class="flex items-center justify-between mb-5">
+                        <h3 class="text-xl font-bold text-goldChampagne-200 flex items-center gap-2">
+                            <i class="fa-solid fa-heart text-goldChampagne-400"></i>
+                            <span>دیوارێ پیرۆزباهییان</span>
+                        </h3>
+                        <span id="wishesCountBadge" class="px-3 py-1 rounded-full bg-goldChampagne-400/20 text-goldChampagne-300 text-xs font-bold">٣ پیرۆزباهی</span>
+                    </div>
+
+                    <div id="wishesList" class="space-y-4 max-h-[380px] overflow-y-auto pl-1">
+                        <!-- Sample Wish 1 -->
+                        <div class="p-4 rounded-2xl bg-emeraldRoyal-950/80 border border-goldChampagne-400/20">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="font-bold text-goldChampagne-300 text-sm">د. کۆڤان زاخۆیی</span>
+                                <span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">دێ ئامادە بیت</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-ivoryWarm/85 leading-relaxed">هزار جاران پیرۆز بیت، خودێ ژیانەکا پڕی خۆشی و بەختەوەری ب رزقێ هەوە بکەت.</p>
+                        </div>
+
+                        <!-- Sample Wish 2 -->
+                        <div class="p-4 rounded-2xl bg-emeraldRoyal-950/80 border border-goldChampagne-400/20">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="font-bold text-goldChampagne-300 text-sm">سۆزان بارزانی</span>
+                                <span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">دێ ئامادە بیت</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-ivoryWarm/85 leading-relaxed">پیرۆزە بووک و زاڤایێن هێژا! ب دل و جان دێ ئامادە بین د شەهیانا هەوە دا.</p>
+                        </div>
+
+                        <!-- Sample Wish 3 -->
+                        <div class="p-4 rounded-2xl bg-emeraldRoyal-950/80 border border-goldChampagne-400/20">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="font-bold text-goldChampagne-300 text-sm">هەژار سندی</span>
+                                <span class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">دێ ئامادە بیت</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-ivoryWarm/85 leading-relaxed">ب هیڤیا ژیانەکا شاد و پڕی سەرکەفتن، پیرۆزە هەڤاڵێ خۆشتڤی.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SHARE INVITATION CARD -->
+        <section class="glass-card gold-border-glow rounded-[2rem] p-7 sm:p-10 text-center">
+            <h3 class="font-serif text-2xl sm:text-3xl font-bold text-goldChampagne-200">داوەتنامێ دگەل هەڤاڵان بەلاڤ بکە</h3>
+            <p class="text-ivoryWarm/75 text-sm mt-2 max-w-md mx-auto">تو دشێی دەقێ داوەتنامێ کۆپی بکەی و ب ڕێکا واتسئەپ یان تێلێگرام بۆ مێهڤانان بهنێری</p>
+            <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+                <button onclick="copyInvitationText()" class="px-6 py-3 rounded-xl bg-goldChampagne-400 text-emeraldRoyal-950 font-bold text-sm hover:brightness-110 transition-all flex items-center gap-2">
+                    <i class="fa-regular fa-copy"></i>
+                    <span>کۆپیکرنا دەقێ داوەتنامێ</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SPONSOR / ADVERTISEMENT BANNER: Bella GROUP (بەشێ ڕیکلاما سپۆنسەری) -->
+    <section id="sponsorBannerSection" class="max-w-5xl mx-auto px-4 pb-10">
+        <div class="relative rounded-[2rem] overflow-hidden border border-goldChampagne-400/40 shadow-2xl transition-transform duration-300 hover:-translate-y-0.5" style="background: linear-gradient(135deg, #c69874 0%, #9b6f4e 48%, #6e4b34 100%);">
+            <!-- Subtle Ambient Light Sheen -->
+            <div class="absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/15 pointer-events-none"></div>
+            
+            <!-- Ad Badge -->
+            <div class="absolute top-3.5 left-4 z-10">
+                <span class="px-3 py-1 rounded-full bg-black/30 backdrop-blur-md border border-white/20 text-white/90 text-[10px] sm:text-xs font-semibold tracking-wider">
+                    ڕیکلام • SPONSOR
+                </span>
+            </div>
+
+            <a id="displaySponsorLink" href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6 px-7 py-8 sm:px-12 sm:py-9 text-white group">
+                <!-- Bella GROUP Custom SVG Logo matching uploaded artwork -->
+                <div class="flex flex-col items-center sm:items-start">
+                    <div class="w-44 sm:w-52 select-none drop-shadow-md transition-transform duration-300 group-hover:scale-105" dir="ltr">
+                        <svg viewBox="0 0 280 125" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto">
+                            <!-- Faceted Diamond above the 'a' -->
+                            <g transform="translate(185, 8) rotate(-14)">
+                                <polygon points="14,0 32,0 42,11 23,30 4,11" stroke="#FFFFFF" stroke-width="2.3" fill="rgba(255,255,255,0.14)" stroke-linejoin="round"/>
+                                <line x1="4" y1="11" x2="42" y2="11" stroke="#FFFFFF" stroke-width="2"/>
+                                <polyline points="14,0 17,11 23,30 29,11 32,0" stroke="#FFFFFF" stroke-width="1.8" fill="none" stroke-linejoin="round"/>
+                                <polyline points="14,0 23,11 32,0" stroke="#FFFFFF" stroke-width="1.6" fill="none"/>
+                            </g>
+                            <!-- Bold Stylized "Bella" Typography -->
+                            <text x="140" y="80" text-anchor="middle" fill="#FFFFFF" font-family="'Cairo', 'Tajawal', 'Arial Rounded MT Bold', sans-serif" font-weight="900" font-size="68" letter-spacing="-2.5">Bella</text>
+                            <!-- Clean "GROUP" Subtitle -->
+                            <text x="140" y="109" text-anchor="middle" fill="#FFFFFF" font-family="'Cairo', 'Tajawal', sans-serif" font-weight="600" font-size="22" letter-spacing="4.5">GROUP</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Promotional Text & Call to Action -->
+                <div class="text-center sm:text-right flex-1 max-w-md">
+                    <h4 id="displaySponsorTitle" class="font-serif text-xl sm:text-2xl font-bold text-white drop-shadow-sm">
+                        Bella GROUP • بێلا گروپ
+                    </h4>
+                    <p id="displaySponsorDesc" class="text-white/90 text-xs sm:text-sm mt-1.5 leading-relaxed">
+                        بۆ جوانترین کارێن میدیایی، وێنەگرتن و ڕێکخستنا ئاهەنگ و شەهیانێن شاهانە ب باشترین کوالێتی.
+                    </p>
+                    <div class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/15 hover:bg-white text-white hover:text-[#6e4b34] border border-white/30 text-xs font-bold transition-all">
+                        <span id="displaySponsorCta">سەرەدانا پەیجێ مە بکە</span>
+                        <i class="fa-solid fa-arrow-up-left"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-goldChampagne-400/20 bg-emeraldRoyal-950/90 py-8 px-4 text-center">
+        <p class="font-serif text-lg text-goldChampagne-300">ب هاتنا هەوە شەهیانا مە خۆشتر دبیت</p>
+        <p class="text-xs text-ivoryWarm/50 mt-2">داوەتناما ئەلیکترۆنی یا تایبەت • ٢٠٢٦</p>
+    </footer>
+
+    <!-- SETTINGS / CUSTOMIZATION MODAL -->
+    <div id="editModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="glass-card gold-border-glow rounded-[2rem] w-full max-w-2xl p-6 sm:p-8 my-auto max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-goldChampagne-400/20 pb-4 mb-6">
+                <h3 class="font-serif text-2xl font-bold text-goldChampagne-200 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-goldChampagne-400"></i>
+                    <span>سێتینگ و دەستکاریکرنا داوەتنامێ</span>
+                </h3>
+                <button onclick="closeEditModal()" class="w-9 h-9 rounded-full bg-emeraldRoyal-900 border border-goldChampagne-400/30 text-goldChampagne-200 hover:text-white flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="editInvitationForm" onsubmit="saveCustomDetails(event)" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-goldChampagne-200 mb-1.5">ناڤێ زاڤای</label>
+                        <input type="text" id="inputGroom" class="w-full px-3.5 py-2.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm text-sm focus:outline-none focus:border-goldChampagne-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-goldChampagne-200 mb-1.5">ناڤێ بووکێ</label>
+                        <input type="text" id="inputBride" class="w-full px-3.5 py-2.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm text-sm focus:outline-none focus:border-goldChampagne-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-goldChampagne-200 mb-1.5">دەقێ ڕۆژێ</label>
+                        <input type="text" id="inputDateText" class="w-full px-3.5 py-2.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm text-sm focus:outline-none focus:border-goldChampagne-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-goldChampagne-200 mb-1.5">دەمژمێرا هەژمارتنا بەروڤاژی</label>
+                        <input type="datetime-local" id="inputCountdownDate" class="w-full px-3.5 py-2.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm text-sm focus:outline-none focus:border-goldChampagne-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-goldChampagne-200 mb-1.5">دەمژمێر</label>
+                        <input type="text" id="inputTimeText" class="w-full px-3.5 py-2.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm text-sm focus:outline-none focus:border-goldChampagne-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-goldChampagne-200 mb-1.5">ناڤێ هۆڵێ</label>
+                        <input type="text" id="inputHall" class="w-full px-3.5 py-2.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm text-sm focus:outline-none focus:border-goldChampagne-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-goldChampagne-200 mb-1.5">ناڤنیشان</label>
+                        <input type="text" id="inputAddress" class="w-full px-3.5 py-2.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm text-sm focus:outline-none focus:border-goldChampagne-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-goldChampagne-200 mb-1.5">لینکێ نەخشەی (Google Maps)</label>
+                        <input type="url" id="inputMapUrl" class="w-full px-3.5 py-2.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm text-sm focus:outline-none focus:border-goldChampagne-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-goldChampagne-200 mb-1.5">وێنەگر (مصور)</label>
+                        <input type="text" id="inputPhotographer" class="w-full px-3.5 py-2.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm text-sm focus:outline-none focus:border-goldChampagne-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-goldChampagne-200 mb-1.5">ژمارا وێنەگری</label>
+                        <input type="tel" id="inputPhotographerPhone" class="w-full px-3.5 py-2.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm text-sm focus:outline-none focus:border-goldChampagne-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-goldChampagne-200 mb-1.5">سترانبێژ</label>
+                        <input type="text" id="inputSinger" class="w-full px-3.5 py-2.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm text-sm focus:outline-none focus:border-goldChampagne-400">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-goldChampagne-200 mb-1.5">ژمارا واتسئەپێ (بۆ پشتڕاستکرنێ)</label>
+                        <input type="text" id="inputWhatsappPhone" placeholder="9647501234567" class="w-full px-3.5 py-2.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm text-sm focus:outline-none focus:border-goldChampagne-400">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-goldChampagne-200 mb-1.5">لینکێ سترانێ / دەنگی (MP3 URL)</label>
+                        <input type="url" id="inputCustomAudioUrl" placeholder="https://example.com/song.mp3" class="w-full px-3.5 py-2.5 rounded-xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/30 text-ivoryWarm text-sm focus:outline-none focus:border-goldChampagne-400">
+                    </div>
+                </div>
+
+                <!-- Upload Video / Audio File -->
+                <div class="p-4 rounded-2xl bg-emeraldRoyal-950/75 border border-goldChampagne-400/25">
+                    <label class="block text-xs font-bold text-goldChampagne-200 mb-2">هەلبژارتنا فایلێ ڤیدیۆ یان سترانێ ژ جهێ خۆ (Upload Video / MP3)</label>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <label class="cursor-pointer px-4 py-2 rounded-xl bg-goldChampagne-400/20 hover:bg-goldChampagne-400 text-goldChampagne-200 hover:text-emeraldRoyal-950 border border-goldChampagne-400/30 text-xs font-bold transition-all inline-flex items-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span>هەلبژارتنا فایلێ</span>
+                            <input type="file" id="mediaFileInput" accept="audio/*,video/*" onchange="handleMediaFileUpload(event)" class="hidden">
+                        </label>
+                        <button type="button" onclick="clearUploadedMedia()" class="px-3.5 py-2 rounded-xl bg-red-500/15 hover:bg-red-500/30 text-red-200 border border-red-400/30 text-xs font-bold transition-all">
+                            ژێبرنا فایلی
+                        </button>
+                        <span id="uploadedFileLabel" class="text-xs text-ivoryWarm/70">چ فایل نەهاتینە هەلبژارتن</span>
+                    </div>
+                </div>
+
+                <!-- Sponsor Settings -->
+                <div class="p-4 rounded-2xl bg-emeraldRoyal-950/75 border border-goldChampagne-400/25 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-goldChampagne-200">سێتینگێ ڕیکلاما Bella GROUP</span>
+                        <label class="inline-flex items-center gap-2 text-xs text-ivoryWarm cursor-pointer">
+                            <input type="checkbox" id="inputShowSponsor" checked class="rounded accent-amber-400">
+                            <span>نیشاندانا ڕیکلامێ</span>
+                        </label>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" id="inputSponsorDesc" placeholder="دەقێ ڕیکلامێ" class="w-full px-3 py-2 rounded-xl bg-emeraldRoyal-900 border border-goldChampagne-400/25 text-ivoryWarm text-xs focus:outline-none">
+                        <input type="url" id="inputSponsorUrl" placeholder="لینکێ ڕیکلامێ" class="w-full px-3 py-2 rounded-xl bg-emeraldRoyal-900 border border-goldChampagne-400/25 text-ivoryWarm text-xs focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-goldChampagne-400/20">
+                    <button type="button" onclick="resetDefaultData()" class="px-4 py-2.5 rounded-xl bg-emeraldRoyal-900 border border-goldChampagne-400/30 text-goldChampagne-200 text-xs font-bold hover:text-white">
+                        زڤڕین بۆ بنەڕەتی
+                    </button>
+                    <button type="submit" class="px-6 py-3 rounded-xl bg-gradient-to-l from-goldChampagne-500 to-goldChampagne-400 text-emeraldRoyal-950 font-extrabold text-sm shadow-lg hover:brightness-110">
+                        پاشەکەفتکرنا سێتینگێ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. COUNTDOWN TIMER LOGIC ---
+        let targetDate = new Date("2026-11-29T18:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                document.getElementById("cd-days").innerText = "00";
+                document.getElementById("cd-hours").innerText = "00";
+                document.getElementById("cd-minutes").innerText = "00";
+                document.getElementById("cd-seconds").innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("cd-days").innerText = String(days).padStart(2, '0');
+            document.getElementById("cd-hours").innerText = String(hours).padStart(2, '0');
+            document.getElementById("cd-minutes").innerText = String(minutes).padStart(2, '0');
+            document.getElementById("cd-seconds").innerText = String(seconds).padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // --- 2. TOAST NOTIFICATION ---
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            const toastMsg = document.getElementById('toastMessage');
+            toastMsg.innerText = message;
+            toast.classList.remove('hidden');
+            toast.classList.add('flex');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+                toast.classList.remove('flex');
+            }, 3500);
+        }
+
+        // --- 3. CUSTOMIZATION MODAL LOGIC ---
+        const STORAGE_KEY = 'kurdish_wedding_invitation_v1';
+        let savedWhatsappNumber = '9647501234567';
+        let savedCustomAudioUrl = '';
+        let uploadedMediaObjectUrl = '';
+        let uploadedMediaFileName = '';
+
+        function openEditModal() {
+            document.getElementById('inputGroom').value = document.getElementById('displayGroomName').innerText;
+            document.getElementById('inputBride').value = document.getElementById('displayBrideName').innerText;
+            document.getElementById('inputDateText').value = document.getElementById('displayCardDate').innerText;
+            document.getElementById('inputTimeText').value = document.getElementById('displayCardTime').innerText;
+            document.getElementById('inputHall').value = document.getElementById('displayCardHall').innerText;
+            document.getElementById('inputAddress').value = document.getElementById('displayCardAddress').innerText;
+            document.getElementById('inputPhotographer').value = document.getElementById('displayPhotographerName').innerText;
+            document.getElementById('inputPhotographerPhone').value = document.getElementById('displayPhotographerPhone').innerText;
+            document.getElementById('inputSinger').value = document.getElementById('displaySingerName').innerText;
+            document.getElementById('inputWhatsappPhone').value = savedWhatsappNumber;
+            document.getElementById('inputCustomAudioUrl').value = savedCustomAudioUrl;
+            document.getElementById('inputMapUrl').value = document.getElementById('displayMapLink').href;
+            document.getElementById('inputShowSponsor').checked = !document.getElementById('sponsorBannerSection').classList.contains('hidden');
+            document.getElementById('inputSponsorDesc').value = document.getElementById('displaySponsorDesc').innerText;
+            document.getElementById('inputSponsorUrl').value = document.getElementById('displaySponsorLink').href;
+
+            const d = new Date(targetDate);
+            if (!isNaN(d.getTime())) {
+                const offsetMs = d.getTimezoneOffset() * 60000;
+                document.getElementById('inputCountdownDate').value = new Date(d.getTime() - offsetMs).toISOString().slice(0, 16);
+            }
+
+            const modal = document.getElementById('editModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeEditModal() {
+            const modal = document.getElementById('editModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function handleMediaFileUpload(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            if (uploadedMediaObjectUrl) {
+                URL.revokeObjectURL(uploadedMediaObjectUrl);
+            }
+
+            uploadedMediaObjectUrl = URL.createObjectURL(file);
+            uploadedMediaFileName = file.name;
+            document.getElementById('uploadedFileLabel').innerText = `هاتە هەلبژارتن: ${file.name}`;
+
+            const mediaPlayer = document.getElementById('customMediaPlayer');
+            mediaPlayer.src = uploadedMediaObjectUrl;
+            showToast("فایلێ مۆزیک/ڤیدیۆ هاتە هەلبژارتن!");
+        }
+
+        function clearUploadedMedia() {
+            if (uploadedMediaObjectUrl) {
+                URL.revokeObjectURL(uploadedMediaObjectUrl);
+                uploadedMediaObjectUrl = '';
+            }
+            uploadedMediaFileName = '';
+            document.getElementById('mediaFileInput').value = '';
+            document.getElementById('uploadedFileLabel').innerText = 'چ فایل نەهاتینە هەلبژارتن';
+            const mediaPlayer = document.getElementById('customMediaPlayer');
+            mediaPlayer.pause();
+            mediaPlayer.removeAttribute('src');
+            showToast("فایلێ هەلبژارتی هاتە ژێبرن.");
+        }
+
+        function saveCustomDetails(event) {
+            event.preventDefault();
+            try {
+                const data = {
+                    groom: document.getElementById('inputGroom').value.trim(),
+                    bride: document.getElementById('inputBride').value.trim(),
+                    dateText: document.getElementById('inputDateText').value.trim(),
+                    timeText: document.getElementById('inputTimeText').value.trim(),
+                    hall: document.getElementById('inputHall').value.trim(),
+                    address: document.getElementById('inputAddress').value.trim(),
+                    photographer: document.getElementById('inputPhotographer').value.trim(),
+                    photographerPhone: document.getElementById('inputPhotographerPhone').value.trim(),
+                    singer: document.getElementById('inputSinger').value.trim(),
+                    whatsappPhone: document.getElementById('inputWhatsappPhone').value.trim(),
+                    customAudioUrl: document.getElementById('inputCustomAudioUrl').value.trim(),
+                    mapUrl: document.getElementById('inputMapUrl').value.trim(),
+                    showSponsor: document.getElementById('inputShowSponsor').checked,
+                    sponsorDesc: document.getElementById('inputSponsorDesc').value.trim(),
+                    sponsorUrl: document.getElementById('inputSponsorUrl').value.trim(),
+                    countdownDate: document.getElementById('inputCountdownDate').value
+                };
+
+                applyInvitationData(data);
+                updateCountdown();
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                closeEditModal();
+                showToast("سێتینگ ب سەرکەفتیانە هاتنە پاشەکەفتکرن!");
+            } catch (err) {
+                console.error("Error saving custom details:", err);
+                showToast("خەلەتییەک د پاشەکەفتکرنێ دا چێبوو.");
+            }
+        }
+
+        function resetDefaultData() {
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+                window.location.reload();
+            } catch (err) {
+                console.error("Error resetting data:", err);
+            }
+        }
+
+        function applyInvitationData(data) {
+            try {
+                if (!data) return;
+
+                if (data.groom) {
+                    document.getElementById('displayGroomName').innerText = data.groom;
+                }
+                if (data.bride) {
+                    document.getElementById('displayBrideName').innerText = data.bride;
+                }
+                if (data.dateText) {
+                    document.getElementById('displayHeroDate').innerText = data.dateText;
+                    document.getElementById('displayCardDate').innerText = data.dateText;
+                }
+                if (data.timeText) {
+                    document.getElementById('displayCardTime').innerText = data.timeText;
+                }
+                if (data.hall) {
+                    document.getElementById('displayHeroVenue').innerText = data.hall;
+                    document.getElementById('displayCardHall').innerText = data.hall;
+                }
+                if (data.address) {
+                    document.getElementById('displayCardAddress').innerText = data.address;
+                }
+                if (data.photographer) {
+                    document.getElementById('displayPhotographerName').innerText = data.photographer;
+                }
+                if (data.singer) {
+                    document.getElementById('displaySingerName').innerText = data.singer;
+                }
+                if (data.photographerPhone) {
+                    const cleanTel = data.photographerPhone.replace(/[^\d+]/g, '');
+                    document.getElementById('displayPhotographerPhone').innerText = data.photographerPhone;
+                    document.getElementById('displayPhotographerPhoneLink').href = `tel:${cleanTel}`;
+                }
+                if (data.whatsappPhone) {
+                    savedWhatsappNumber = data.whatsappPhone.replace(/\D/g, '');
+                }
+                if (data.mapUrl) {
+                    document.getElementById('displayMapLink').href = data.mapUrl;
+                }
+                if (typeof data.customAudioUrl === 'string') {
+                    savedCustomAudioUrl = data.customAudioUrl.trim();
+                }
+                if (typeof data.showSponsor === 'boolean') {
+                    document.getElementById('sponsorBannerSection').classList.toggle('hidden', !data.showSponsor);
+                }
+                if (data.sponsorDesc) {
+                    document.getElementById('displaySponsorDesc').innerText = data.sponsorDesc;
+                }
+                if (data.sponsorUrl) {
+                    document.getElementById('displaySponsorLink').href = data.sponsorUrl;
+                }
+                if (data.countdownDate) {
+                    const parsed = new Date(data.countdownDate).getTime();
+                    if (!isNaN(parsed)) {
+                        targetDate = parsed;
+                    }
+                }
+            } catch (err) {
+                console.error("Error applying invitation data:", err);
+            }
+        }
+
+        // Load saved data on page load
+        (function loadSavedData() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    applyInvitationData(parsed);
+                }
+            } catch (err) {
+                console.error("Error loading saved invitation data:", err);
+            }
+        })();
+
+        // --- 4. RSVP & WISHES WALL LOGIC ---
+        function handleRsvpSubmit(event) {
+            event.preventDefault();
+            try {
+                const name = document.getElementById('guestName').value.trim();
+                const status = document.getElementById('attendanceStatus').value;
+                const count = document.getElementById('guestCount').value;
+                const wish = document.getElementById('guestWish').value.trim();
+
+                if (!name) return;
+
+                const wishesList = document.getElementById('wishesList');
+                const badgeText = status === 'attending' ? `دێ ئامادە بیت (${count})` : 'نەشێت ئامادە ببیت';
+                const badgeStyle = status === 'attending'
+                    ? 'bg-emerald-500/20 text-emerald-300'
+                    : 'bg-amber-500/20 text-amber-300';
+
+                const card = document.createElement('div');
+                card.className = 'p-4 rounded-2xl bg-emeraldRoyal-950/90 border border-goldChampagne-400/35 transition-all';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="font-bold text-goldChampagne-300 text-sm">${escapeHtml(name)}</span>
+                        <span class="text-[11px] px-2 py-0.5 rounded-full ${badgeStyle}">${badgeText}</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-ivoryWarm/90 leading-relaxed">${escapeHtml(wish || 'پیرۆز بیت، ب هیڤیا بەختەوەرییا هەوە.')}</p>
+                `;
+
+                wishesList.prepend(card);
+                updateWishesCount();
+                document.getElementById('rsvpForm').reset();
+                showToast("سپاس بۆ پشتڕاستکرنا هاتنێ و پیرۆزباهییا تە!");
+            } catch (err) {
+                console.error("Error submitting RSVP:", err);
+            }
+        }
+
+        function sendRsvpViaWhatsApp() {
+            try {
+                const name = document.getElementById('guestName').value.trim();
+                const status = document.getElementById('attendanceStatus').value;
+                const count = document.getElementById('guestCount').value;
+                const wish = document.getElementById('guestWish').value.trim();
+
+                if (!name) {
+                    showToast("هیڤیدارین پێشی ناڤێ خۆ بنڤیسە!");
+                    document.getElementById('guestName').focus();
+                    return;
+                }
+
+                const phone = (savedWhatsappNumber || '').replace(/\D/g, '');
+                if (!phone) {
+                    showToast("ژمارا واتسئەپێ نەهاتییە دیاریکرن!");
+                    return;
+                }
+
+                const statusLabel = status === 'attending' ? 'بەلێ، دێ ئامادە بم' : 'ببورە، نەشێم ئامادە ببم';
+                const message = [
+                    `سڵاو، پشتڕاستکرنا هاتنێ بۆ داوەتنامێ:`,
+                    `• ناڤ: ${name}`,
+                    `• رەوش: ${statusLabel}`,
+                    `• هژمارا مێهڤانان: ${count}`,
+                    wish ? `• پیرۆزباهی: ${wish}` : ''
+                ].filter(Boolean).join('\n');
+
+                const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+                window.open(waUrl, '_blank', 'noopener,noreferrer');
+            } catch (err) {
+                console.error("Error sending WhatsApp RSVP:", err);
+            }
+        }
+
+        function updateWishesCount() {
+            const count = document.getElementById('wishesList').children.length;
+            document.getElementById('wishesCountBadge').innerText = `${count} پیرۆزباهی`;
+        }
+
+        function escapeHtml(str) {
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // --- 5. COPY INVITATION TEXT ---
+        function copyInvitationText() {
+            const groom = document.getElementById('displayGroomName').innerText;
+            const bride = document.getElementById('displayBrideName').innerText;
+            const dateTxt = document.getElementById('displayCardDate').innerText;
+            const timeTxt = document.getElementById('displayCardTime').innerText;
+            const hallTxt = document.getElementById('displayCardHall').innerText;
+            const addressTxt = document.getElementById('displayCardAddress').innerText;
+            const photoTxt = document.getElementById('displayPhotographerName').innerText;
+            const photoPhone = document.getElementById('displayPhotographerPhone').innerText;
+            const singerTxt = document.getElementById('displaySingerName').innerText;
+
+            const fullText = `ب ناڤێ خودایێ مەزن و دلۆڤان\n\nداوەتنامەکا تایبەت بۆ شەهیانا (${groom} & ${bride})\n\n📅 ڕۆژ: ${dateTxt}\n⏰ دەم: ${timeTxt}\n📍 جهـ: ${hallTxt} - ${addressTxt}\n📸 وێنەگر: ${photoTxt} (${photoPhone})\n🎤 سترانبێژ: ${singerTxt}\n\nب هاتنا هەوە خۆشیا مە زێدەتر دبیت.`;
+
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.value = fullText;
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextarea);
+
+            showToast("دەقێ داوەتنامێ ب سەرکەفتیانە هاتە کۆپیکرن!");
+        }
+
+        // --- 6. AMBIENT WEDDING MELODY & CUSTOM MEDIA PLAYER (Web Audio + Video/Audio) ---
+        let audioCtx = null;
+        let isPlaying = false;
+        let ambientInterval = null;
+
+        function startWebAudioMelody() {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (!audioCtx) {
+                audioCtx = new AudioContextClass();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            // Gentle romantic notes (D major / Arabic Rast-inspired warm chords)
+            const notes = [293.66, 369.99, 440.00, 587.33, 493.88, 440.00, 369.99, 329.63];
+            let step = 0;
+
+            function playSoftNote(freq) {
+                if (!audioCtx || audioCtx.state !== 'running') return;
+                const now = audioCtx.currentTime;
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now);
+
+                gain.gain.setValueAtTime(0.0001, now);
+                gain.gain.exponentialRampToValueAtTime(0.045, now + 0.18);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(now);
+                osc.stop(now + 1.65);
+            }
+
+            playSoftNote(notes[0]);
+            step = 1;
+            ambientInterval = setInterval(() => {
+                playSoftNote(notes[step % notes.length]);
+                step++;
+            }, 1100);
+        }
+
+        function stopMusic() {
+            const visualizer = document.getElementById('visualizer');
+            const musicText = document.getElementById('musicText');
+            const playIcon = document.getElementById('musicPlayIcon');
+            const mediaPlayer = document.getElementById('customMediaPlayer');
+
+            if (ambientInterval) {
+                clearInterval(ambientInterval);
+                ambientInterval = null;
+            }
+            if (audioCtx && audioCtx.state === 'running') {
+                audioCtx.suspend();
+            }
+            if (mediaPlayer && !mediaPlayer.paused) {
+                mediaPlayer.pause();
+            }
+
+            isPlaying = false;
+            visualizer.classList.remove('playing');
+            playIcon.classList.remove('fa-pause');
+            playIcon.classList.add('fa-play');
+            musicText.innerText = "لێدانا مۆزیکێ";
+        }
+
+        async function toggleMusic() {
+            const visualizer = document.getElementById('visualizer');
+            const musicText = document.getElementById('musicText');
+            const playIcon = document.getElementById('musicPlayIcon');
+            const mediaPlayer = document.getElementById('customMediaPlayer');
+
+            if (!isPlaying) {
+                const activeSource = uploadedMediaObjectUrl || savedCustomAudioUrl;
+                try {
+                    if (activeSource) {
+                        if (mediaPlayer.src !== activeSource) {
+                            mediaPlayer.src = activeSource;
+                        }
+                        mediaPlayer.muted = false;
+                        mediaPlayer.volume = 1.0;
+                        await mediaPlayer.play();
+                    } else {
+                        startWebAudioMelody();
+                    }
+
+                    isPlaying = true;
+                    visualizer.classList.add('playing');
+                    playIcon.classList.remove('fa-play');
+                    playIcon.classList.add('fa-pause');
+                    musicText.innerText = uploadedMediaFileName ? "ستران کار دکەت" : "مۆزیک کار دکەت";
+                } catch (e) {
+                    // Fallback to built-in Web Audio melody if media fails to decode
+                    startWebAudioMelody();
+                    isPlaying = true;
+                    visualizer.classList.add('playing');
+                    playIcon.classList.remove('fa-play');
+                    playIcon.classList.add('fa-pause');
+                    musicText.innerText = "مۆزیک کار دکەت";
+                }
+            } else {
+                stopMusic();
+            }
+        }
+    </script>
+</body>
+</html>
